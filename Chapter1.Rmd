@@ -1,0 +1,185 @@
+# First Steps
+
+```{r, include=FALSE}
+library(palmerpenguins)
+library(tidyverse)
+library(ggthemes)
+```
+
+To view a some basic data of a dataset do
+
+``` r
+glimpse(penguins)
+View(penguins)
+```
+
+## Important Terms to Know
+
+Variable
+
+:   A quantity, quality, or property that you can measure.
+
+Value
+
+:   The state of a variable when you measure it. The value of a variable may change from measurement to measurement.
+
+Observation
+
+:   A set of measurements made under similar conditions (you usually make all of the measurements in an observation at the same time and on the same object). An observation will contain several values, each associated with a different variable. We’ll sometimes refer to an observation as a data point.
+
+Tabular data
+
+:   A set of values, each associated with a variable and an observation. Tabular data is tidy if each value is placed in its own “cell,” each variable in its own column, and each observation in its own row.
+
+## Starting ggplot
+
+First we define plot object
+
+The first argument of ggplot is the dataset we are going to use. In this case its penguins
+
+```{r}
+ggplot(data = penguins)
+```
+
+Now we want to tell ggplot() how the data will be visually displayed
+
+The mapping argument defines how the variables of in your dataset will be mapped to which visual properties
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+)
+```
+
+### Observations
+
+There will be an error in r if there are rows missing values
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm,
+                y = body_mass_g)
+) +
+  geom_point()
+```
+
+Geom
+
+:   geometrical object that plot uses to represent data
+
+Now, we should try to question the relationships in our dataset
+
+## Adding Aesthetics and Layers
+
+Scaling
+
+:   When a categorical variable is mapped to an aesthetic, ggplot2 will automatically assign a unique value of the aesthetic to each unique variable
+
+In this case it is an unique color to a unique species
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm,
+                y = body_mass_g,
+                color = species)
+) +
+  geom_point()
+```
+
+Next we add a new geom as a layer on top of our point. This will draw a line of best fit based on a linear model.
+
+Remember that aesthetic mappings in ggplot are at a global level so they are passed down to each of geom layers. In this example this will make every geom map to color = "species"
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm,
+                y = body_mass_g,
+                color = species)
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+Thus we should declare the color mapping in the local level
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm,
+                y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species)) +
+  geom_smooth(method = "lm")
+```
+
+We should always use shapes to differentiate b/c of color blindness
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm,
+                y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+```
+
+Then add labels with labs() and colorblind support with scale_color_colorblind()
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm,
+                y = body_mass_g)
+) +
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "Species", shape = "Species"
+  ) +
+  scale_color_colorblind()
+```
+
+## Exercises
+
+1.  How many rows are in penguins? How many columns?
+
+    ```{r}
+    glimpse(penguins)
+    ```
+
+2.   What does the bill_depth_mm variable in the penguins data frame describe? Read the help for ?penguins to find out.
+
+    1.  a number denoting bill length (millimeters)
+
+3.  Make a scatterplot of bill_depth_mm versus bill_length_mm. That is, make a scatterplot with bill_depth_mm on the y-axis and bill_length_mm on the x-axis. Describe the relationship between these two variables.
+
+    ```{r}
+    ggplot(
+      data = penguins,
+      mapping = aes(x = bill_length_mm,y = bill_depth_mm)
+    ) +
+      geom_point() +
+      geom_smooth(method = "lm")
+    ```
+
+4.  
+
+5.  
+
+6.  
+
+7.  
+
+8.  
+
+9.  
+
+10. 
